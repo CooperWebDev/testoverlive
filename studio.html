@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio — OverLive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="overlay.css"></head>
+<body class="studio-page">
+<header class="navbar"><a href="index.html" class="logo"><span class="logo-icon">O</span><span>Over<span>Live</span></span></a>
+<nav><a href="index.html#overlays">All overlays</a></nav></header>
+
+<div class="studio">
+  <aside class="panel">
+    <label>Overlay<select id="pick"></select></label>
+
+    <h3>Size</h3>
+    <label>Scale <output id="oS"></output><input type="range" id="s" min="0.25" max="3" step="0.05"></label>
+    <label>Width <output id="oW"></output><input type="range" id="w" min="80" max="1920" step="10"></label>
+    <label>Height <output id="oH"></output><input type="range" id="h" min="40" max="1080" step="10"></label>
+
+    <h3>Style</h3>
+    <label class="inline">Accent colour<input type="color" id="c"></label>
+
+    <h3>Content</h3>
+    <div id="fields"></div>
+    <button class="ghost" id="reset">Reset to defaults</button>
+  </aside>
+
+  <section class="main">
+    <div class="stage-bar">
+      <span id="size" class="pill"></span>
+      <div class="bgs" id="bgs"><button data-bg="game" class="on">Game</button><button data-bg="grid">Transparent</button><button data-bg="light">Light</button></div>
+    </div>
+    <div class="stage game" id="stage"></div>
+
+    <div class="link-card">
+      <div><b>Your overlay link</b><small>Add it in OBS or Streamlabs as a Browser Source. Change the size and this link changes too.</small></div>
+      <div class="link-row"><input id="link" readonly><button id="copy" class="primary">Copy link</button></div>
+      <div class="how">In OBS: Sources, + , Browser, paste the link, then enter the width and height shown above.</div>
+    </div>
+  </section>
+</div>
+
+<script src="overlays.js"></script>
+<script>
+const $ = id => document.getElementById(id), p = new URLSearchParams(location.search);
+let o = find(p.get('o')) || OVERLAYS[0], v;
+
+$('pick').innerHTML = Object.entries(CATEGORIES).map(([k, n]) =>
+  `<optgroup label="${n}">${OVERLAYS.filter(x => x.cat === k).map(x => `<option value="${x.id}">${x.name}</option>`).join('')}</optgroup>`).join('');
+
+function load(params) {
+  v = values(o, params); v.demo = 1; $('pick').value = o.id;
+  $('s').value = v.s; $('w').value = v.w; $('h').value = v.h; $('c').value = v.c;
+  $('fields').innerHTML = o.f.map(f => `<label>${f.l}<input data-k="${f.k}" ${f.n ? 'type="number"' : ''} value="${esc(v[f.k])}"></label>`).join('');
+  draw();
+}
+function draw() {
+  mount($('stage'), o, v, true);
+  const w = Math.round(v.w * v.s), h = Math.round(v.h * v.s), q = query(o, v);
+  q.delete('demo');
+  $('oS').textContent = Math.round(v.s * 100) + '%'; $('oW').textContent = v.w + 'px'; $('oH').textContent = v.h + 'px';
+  $('size').textContent = `Browser source size: ${w} × ${h}`;
+  $('link').value = new URL('overlay.html?' + q, location.href).href;
+  history.replaceState(null, '', '?' + q);
+}
+$('pick').onchange = e => { o = find(e.target.value); load(new URLSearchParams()); };
+['s', 'w', 'h', 'c'].forEach(k => $(k).oninput = e => { v[k] = k === 'c' ? e.target.value : +e.target.value; draw(); });
+$('fields').oninput = e => { const f = o.f.find(x => x.k === e.target.dataset.k); v[f.k] = f.n ? +e.target.value : e.target.value; draw(); };
+$('reset').onclick = () => load(new URLSearchParams());
+$('copy').onclick = async () => { await navigator.clipboard.writeText($('link').value); $('copy').textContent = 'Copied'; setTimeout(() => $('copy').textContent = 'Copy link', 1500); };
+$('bgs').onclick = e => { const b = e.target.dataset.bg; if (!b) return;
+  $('stage').className = 'stage ' + b; [...$('bgs').children].forEach(x => x.classList.toggle('on', x === e.target)); };
+addEventListener('resize', draw);
+load(p);
+</script></body></html>

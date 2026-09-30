@@ -1,0 +1,72 @@
+/* Overlay looks. Everything is in em, so font-size (set from the scale) resizes the whole overlay. */
+.ov{box-sizing:border-box;display:flex;align-items:center;color:#fff;overflow:hidden;font-family:Inter,system-ui,sans-serif;line-height:1.2;--bg:rgba(16,11,32,.9);--line:rgba(255,255,255,.12)}
+.ov *{box-sizing:border-box;margin:0}
+.ov b{font-weight:700}
+.ov span,.ov u{text-decoration:none}
+
+.k-lower-third,.k-latest,.k-alert,.k-goal,.k-nowplaying,.k-countdown,.k-socials,.k-scoreboard,.k-live{background:var(--bg);border:1px solid var(--line);border-radius:.6em}
+.k-lower-third{padding:0 1.3em;gap:1em}
+.k-lower-third .bar{width:.3em;height:60%;border-radius:1em;background:var(--c);box-shadow:0 0 1em var(--c)}
+.k-lower-third b{display:block;font-size:1.7em}
+.k-lower-third span{display:block;margin-top:.3em;color:var(--c);filter:brightness(1.5);font-size:1em}
+
+.k-webcam{border:.22em solid var(--c);border-radius:.9em;box-shadow:inset 0 0 2.2em color-mix(in srgb,var(--c) 55%,transparent);align-items:flex-end;justify-content:flex-start;padding:.9em}
+.k-webcam em{font-style:normal;font-weight:600;font-size:.95em;padding:.4em .9em;border-radius:2em;background:var(--bg);border:1px solid var(--line)}
+
+.k-live{justify-content:center;gap:.6em;background:var(--c);border-color:transparent}
+.k-live b{font-size:1.15em;letter-spacing:.12em}
+.k-live .dot{width:.7em;height:.7em;border-radius:50%;background:#fff;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.25}}
+
+.k-latest{padding:0 1.3em;border-left:.3em solid var(--c)}
+.k-latest span{display:block;font-size:.85em;opacity:.65}
+.k-latest b{display:block;margin-top:.2em;font-size:1.6em}
+
+.k-alert{flex-direction:column;justify-content:center;gap:.3em;text-align:center;background:linear-gradient(135deg,var(--bg),color-mix(in srgb,var(--c) 45%,#0b0715));border-color:var(--c);box-shadow:0 0 2em color-mix(in srgb,var(--c) 40%,transparent)}
+.k-alert span{font-size:1.1em;opacity:.8}
+.k-alert b{font-size:2.6em}
+
+.k-goal{flex-direction:column;justify-content:center;gap:.7em;padding:0 1.3em}
+.k-goal .row{width:100%;display:flex;justify-content:space-between;font-size:1.05em}
+.k-goal .row span{opacity:.8}
+.k-goal .track{width:100%;height:.7em;border-radius:1em;background:rgba(255,255,255,.1)}
+.k-goal .track i{display:block;height:100%;border-radius:1em;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 50%,#fff))}
+
+.k-starting,.k-brb,.k-ending{flex-direction:column;justify-content:center;gap:.5em;text-align:center;background:radial-gradient(circle at 50% 40%,#2a1660,#0a0616 70%);position:relative}
+.ov .glow{position:absolute;width:50%;height:50%;border-radius:50%;background:var(--c);opacity:.18;filter:blur(8em)}
+.k-starting h1,.k-brb h1,.k-ending h1{position:relative;font-size:6em;letter-spacing:-.03em}
+.k-starting p,.k-brb p,.k-ending p{position:relative;font-size:1.8em;opacity:.7}
+.ov .cd{position:relative;font-variant-numeric:tabular-nums;font-weight:800}
+.k-starting .cd,.k-brb .cd{margin-top:.6em;padding:.15em .6em;font-size:4em;border-radius:.3em;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+
+.k-nowplaying{padding:0 1.2em;gap:1em}
+.k-nowplaying .art{width:3.6em;height:3.6em;border-radius:.6em;background:var(--c);display:flex;align-items:flex-end;justify-content:center;gap:.2em;padding:.8em}
+.k-nowplaying .art u{width:.35em;background:#fff;border-radius:.2em;animation:eq 1s ease-in-out infinite alternate}
+.k-nowplaying .art u:nth-child(2){animation-delay:-.3s}.k-nowplaying .art u:nth-child(3){animation-delay:-.6s}.k-nowplaying .art u:nth-child(4){animation-delay:-.15s}
+@keyframes eq{from{height:20%}to{height:100%}}
+.k-nowplaying b{display:block;font-size:1.35em}
+.k-nowplaying span{display:block;margin-top:.3em;opacity:.65}
+
+.k-countdown{flex-direction:column;justify-content:center;gap:.2em}
+.k-countdown span{font-size:.95em;opacity:.65}
+.k-countdown .cd{font-size:3.2em;color:color-mix(in srgb,var(--c) 40%,#fff)}
+
+.k-socials{justify-content:space-evenly}
+.k-socials p{display:flex;flex-direction:column;gap:.25em;text-align:center;font-weight:600}
+.k-socials u{font-size:.75em;font-weight:500;color:var(--c);filter:brightness(1.5)}
+
+.k-ticker{background:var(--bg);border-top:.15em solid var(--c)}
+.k-ticker b{flex:none;height:100%;display:grid;place-items:center;padding:0 1.4em;background:var(--c);letter-spacing:.1em;font-size:.9em}
+.k-ticker .mq{flex:1;overflow:hidden;white-space:nowrap}
+.k-ticker .mq span{display:inline-block;padding-left:100%;animation:mq 22s linear infinite}
+@keyframes mq{to{transform:translateX(-100%)}}
+
+.k-chat{flex-direction:column;align-items:stretch;justify-content:flex-end;gap:.7em;padding:1em;background:var(--bg);border:1px solid var(--line);border-radius:.8em}
+.k-chat p{padding:.6em .8em;border-radius:.5em;background:rgba(255,255,255,.06);font-size:.9em}
+.k-chat p b{color:color-mix(in srgb,var(--c) 45%,#fff)}
+.k-chat iframe{width:100%;height:100%;border:0}
+
+.k-scoreboard{justify-content:space-evenly;gap:.4em;padding:0 1em}
+.k-scoreboard span{flex:1;text-align:center;font-weight:600;letter-spacing:.06em}
+.k-scoreboard b{min-width:1.6em;padding:.15em 0;text-align:center;font-size:2em;border-radius:.3em;background:var(--c)}
+.k-scoreboard i{font-style:normal;font-size:1.5em;opacity:.5}

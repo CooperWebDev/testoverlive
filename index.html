@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OverLive — Stream overlays you can resize</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="overlay.css"></head>
+<body>
+<header class="navbar"><a href="#" class="logo"><span class="logo-icon">O</span><span>Over<span>Live</span></span></a>
+<nav><a href="#how">How it works</a><a href="#overlays">Overlays</a><a href="studio.html" class="nav-cta">Open studio</a></nav></header>
+
+<main>
+<section class="hero">
+  <div class="hero-content">
+    <div class="badge">Free overlays for OBS and Streamlabs</div>
+    <h1>Overlays that fit your stream <span>exactly.</span></h1>
+    <p>Pick an overlay, set its size and colours, and get a link for your browser source. Every size gets its own link, so it works in your scene the moment you paste it.</p>
+    <div class="cta-row"><a href="#overlays" class="hero-button">Browse overlays</a><a href="studio.html" class="ghost-link">Open the studio</a></div>
+  </div>
+  <div class="hero-demo" id="heroDemo"></div>
+</section>
+
+<section class="how" id="how">
+  <div class="step"><b>Choose</b><p>Browse lower thirds, webcam frames, alerts, scenes and more.</p></div>
+  <div class="step"><b>Resize</b><p>Set the scale, width, height and accent colour with a live preview.</p></div>
+  <div class="step"><b>Paste the link</b><p>Add it as a Browser Source. OverLive shows the exact size to enter.</p></div>
+</section>
+
+<section class="overlays-section" id="overlays">
+  <div class="section-header">
+    <div><h2>Choose an overlay</h2><p class="sub"><span id="overlayCount">0</span> overlays, all resizable</p></div>
+    <div class="categories" id="cats"></div>
+  </div>
+  <div class="overlay-grid" id="overlayGrid"></div>
+</section>
+</main>
+
+<footer><div class="footer-brand"><span class="logo-icon">O</span><strong>Over<span>Live</span></strong></div>
+<p>Beautiful overlays for streamers.</p><div class="copyright">© 2026 OverLive</div></footer>
+
+<script src="overlays.js"></script><script src="script.js"></script>
+</body></html>

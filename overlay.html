@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>OverLive overlay</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="overlay.css"><style>html,body{background:transparent!important;margin:0;overflow:hidden}</style></head>
+<body><div id="root"></div>
+<script src="overlays.js"></script>
+<script>
+  const p = new URLSearchParams(location.search), o = find(p.get('o'));
+  if (o) mount(document.getElementById('root'), o, values(o, p), false);
+  else document.body.innerHTML = '<p style="font:14px sans-serif;color:#fff;padding:1em">Unknown overlay. Pick one at the OverLive studio.</p>';
+</script></body></html>

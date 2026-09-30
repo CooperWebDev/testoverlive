@@ -2,6 +2,7 @@
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const T = (k, l, d) => ({k, l, d});
 const N = (k, l, d) => ({k, l, d, n: 1});
+const C = (k, l, d) => ({k, l, d, col: 1});
 
 const CATEGORIES = {
   essentials: 'Essentials', scenes: 'Scenes', alerts: 'Alerts & goals',
@@ -82,16 +83,25 @@ const OVERLAYS = [
   { id: 'scoreboard', name: 'Mini scoreboard', cat: 'sports', w: 480, h: 88,
     desc: 'Simple two-team score strip.',
     f: [T('t1', 'Home', 'HOME'), N('n1', 'Home score', 2), T('t2', 'Away', 'AWAY'), N('n2', 'Away score', 1)],
-    r: v => `<span>${esc(v.t1)}</span><b>${esc(v.n1)}</b><i>:</i><b>${esc(v.n2)}</b><span>${esc(v.t2)}</span>` }
-];
+    r: v => `<span>${esc(v.t1)}</span><b>${esc(v.n1)}</b><i>:</i><b>${esc(v.n2)}</b><span>${esc(v.t2)}</span>` },
 
-/* Overlay that lives on its own site (kept from the original project) */
-const EXTERNAL = [{
-  id: 'football-scoreboard', name: 'Football scoreboard', cat: 'sports', external: true,
-  desc: 'Advanced football scoreboard with its own control panel.',
-  previews: [1, 2, 3, 4].map(i => `images/football-scoreboard/preview-${i}.png`),
-  panel: 'https://secretpepper.github.io/football-scoreboard/control.html'
-}];
+  { id: 'football', name: 'Football scoreboard', cat: 'sports', w: 760, h: 140,
+    desc: 'Team colours, live match clock and goal scorers.',
+    f: [T('t1', 'Home team', 'SPA'), N('n1', 'Home score', 1), C('c1', 'Home colour', '#dc2626'),
+        T('t2', 'Away team', 'CZE'), N('n2', 'Away score', 2), C('c2', 'Away colour', '#2563eb'),
+        T('t3', 'Competition', 'Nations League'),
+        N('m', 'Match minute (start)', 43), N('run', 'Clock running (1 = yes, 0 = paused)', 1),
+        T('g1', 'Home scorers (separate with ;)', "Lamine Yamal 43'"),
+        T('g2', 'Away scorers (separate with ;)', "Pavel Šulc 23'; Jiří Sláma 87'")],
+    r: v => {
+      const list = (s, side) => `<div class="${side}">` + String(s).split(';').map(x => x.trim()).filter(Boolean).map(x => `<em>${esc(x)}</em>`).join('') + '</div>';
+      return `<div class="bar" style="--h:${esc(v.c1)};--a:${esc(v.c2)}">` +
+        `<div class="tm h"><b class="nm">${esc(v.t1)}</b><b class="sc">${esc(v.n1)}</b></div>` +
+        `<div class="mid"><small>${esc(v.t3)}</small><div class="clk" data-clk="${+v.m || 0}" data-run="${+v.run ? 1 : 0}">00:00</div></div>` +
+        `<div class="tm a"><b class="sc">${esc(v.n2)}</b><b class="nm">${esc(v.t2)}</b></div></div>` +
+        `<div class="gl" style="--h:${esc(v.c1)};--a:${esc(v.c2)}">${list(v.g1, 'h')}${list(v.g2, 'a')}</div>`;
+    } }
+];
 
 const find = id => OVERLAYS.find(o => o.id === id);
 const COLOR = '#8b5cf6';
@@ -124,13 +134,18 @@ function mount(el, o, v, fit) {
   el.innerHTML = html(o, v);
   const node = el.firstChild, now = Date.now();
   node.querySelectorAll('[data-m]').forEach(n => n.dataset.end = now + n.dataset.m * 6e4);
+  node.querySelectorAll('[data-clk]').forEach(n => n.dataset.t0 = now - n.dataset.clk * 6e4);
+  tick();
   if (!fit) return;
   const w = v.w * v.s, h = v.h * v.s;
   const k = Math.min(el.clientWidth / w, el.clientHeight / h) * (o.full ? 1 : .78);
   node.style.cssText += `;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(${Math.min(k, 3)})`;
 }
 
-setInterval(() => document.querySelectorAll('[data-end]').forEach(n => {
-  const t = Math.max(0, Math.round((n.dataset.end - Date.now()) / 1000));
-  n.textContent = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
-}), 500);
+const mmss = t => String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+function tick() {
+  document.querySelectorAll('[data-end]').forEach(n => n.textContent = mmss(Math.max(0, Math.round((n.dataset.end - Date.now()) / 1000))));
+  document.querySelectorAll('[data-clk]').forEach(n => n.textContent = mmss(n.dataset.run === '1'
+    ? Math.max(0, Math.floor((Date.now() - n.dataset.t0) / 1000)) : Math.round(n.dataset.clk * 60)));
+}
+setInterval(tick, 500);

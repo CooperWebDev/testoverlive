@@ -50,7 +50,7 @@ $('pick').innerHTML = Object.entries(CATEGORIES).map(([k, n]) =>
 function load(params) {
   v = values(o, params); v.demo = 1; $('pick').value = o.id;
   $('s').value = v.s; $('w').value = v.w; $('h').value = v.h; $('c').value = v.c;
-  $('fields').innerHTML = o.f.map(f => `<label>${f.l}<input data-k="${f.k}" ${f.n ? 'type="number"' : ''} value="${esc(v[f.k])}"></label>`).join('');
+  $('fields').innerHTML = o.f.map(f => `<label${f.col ? ' class="inline"' : ''}>${f.l}<input data-k="${f.k}" ${f.n ? 'type="number"' : f.col ? 'type="color"' : ''} value="${esc(v[f.k])}"></label>`).join('');
   draw();
 }
 function draw() {
